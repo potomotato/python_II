@@ -26,7 +26,7 @@ lõuend.pack() # tenie valik oleks grid manager
 pilt = PhotoImage(file="dogerer(2).png")
 objekt = lõuend.create_image(100, 100, image=pilt)
 
-##### liikuv pall ######
+##### liikuv pall #######
 vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
 
 xspeed = yspeed = 3 # kiirus 3 pikslit 10 ms järel
@@ -116,7 +116,6 @@ def puutetuvastus():
             root.after(1000, reset_tabamus)
 
 def colchek(): # kontrollib iga natukese aja tagant kas objektide ääred puutuvad
-    doge_äär_puude()
     puutetuvastus()
     root.after(100, colchek)
 
@@ -127,24 +126,28 @@ def vasak(event):
     x = -10
     y = 0
     lõuend.move(objekt, x, y)
+    doge_äär_puude()
 
 
 def parem(event):
     x = 10
     y = 0
     lõuend.move(objekt, x, y)
+    doge_äär_puude()
 
 
 def üles(event):
     x = 0
     y = -10
     lõuend.move(objekt, x, y)
+    doge_äär_puude()
 
 
 def alla(event):
     x = 0
     y = 10
     lõuend.move(objekt, x, y)
+    doge_äär_puude()
 
     
 
