@@ -20,16 +20,28 @@ progress.pack(pady=10)
 progress["maximum"] = 100
 progress["value"] = 0
 
-def taasta_pilt():
-    lõuend.itemconfig(objekt, image=pilt)
-
 lõuend = Canvas(root, width = l, height = k, bg = "black")
 lõuend.pack() # tenie valik oleks grid manager
 
 # ruut = lõuend.create_rectangle(x, y, x+50, y+50, fill = "blue") #ruudu omadused, pikkus laius värv
 pilt = PhotoImage(file="dogerer(2).png")
-pilt_hit = PhotoImage(file="sibau.png")  
 objekt = lõuend.create_image(100, 100, image=pilt)
+
+##### liikuv pall ######
+vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
+
+xspeed = yspeed = 5 # kiirus 5 pikslit 20 ms järel
+def moveBall(): # palli liikumine ja asukoha kt
+    global xspeed, yspeed # teeb globaalseks, et saaks muuta funkt sees
+    lõuend.move(vastane, xspeed, yspeed)
+    (leftPos, topPos, rightPos, bottomPos) = lõuend.coords(vastane)
+    if leftPos <= 0 or rightPos >= l: #kontrllib kas pall on jõudnud vasaku või parema äärde
+        xspeed = -xspeed #palli suuna muut
+    if topPos <= 0 or bottomPos >= k:
+        yspeed = -yspeed
+    lõuend.after(20, moveBall) #kutsub funktiooni iga 20 millisekundi järel
+lõuend.after(20, moveBall) # alustab loopimist
+##############################
 
 objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
 
@@ -60,12 +72,8 @@ def puutetuvastus():
         d[3] > o[1] and
         d[1] < o[3]
     ):
-        #
-        lõuend.itemconfig(objekt, image=pilt_hit)
         
 
-        # 150 ms pärast tagasi
-        root.after(150, taasta_pilt)
         winsound.PlaySound("hit.wav", winsound.SND_ASYNC)
 
         # progress
@@ -122,7 +130,5 @@ root.bind("<Left>", vasak)
 root.bind("<Right>", parem)
 root.bind("<Up>", üles)
 root.bind("<Down>", alla)
-
-winsound.PlaySound("industrial.wav", winsound.SND_ASYNC)
 
 root.mainloop()
