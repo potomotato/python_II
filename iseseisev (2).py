@@ -2,22 +2,27 @@ from tkinter import *
 import random
 from tkinter import ttk
 import winsound
+
+
 #loov ekraani
 root = Tk()
-root.geometry("800x900")
+root.geometry("900x1000") #window mõõdud
+root.title("dogerererei mäng") #extra clutter
+root.resizable(False, False)
+menu = Menu(root)
+root.config(menu=menu)
 
 #lõuendi mõõdud
 l = 800
 k = 900
 
-tabamus_valmis = True
-# näitab kaugel koordinaat on ekraani piirist. lisab koordinaadid ekraani keskele
+tabamus_valmis = True #kontrollib kas tabamu valmis et heli ei spämmiks
 
-progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
-progress.pack(pady=10)
+progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate") #deferminate tähendab et täitub kindla protsendi võrra
+progress.pack(pady=10) #paneb ekraanile, pady on kaugus progressi ja teiste elemnt vahel
 
-progress["maximum"] = 100
-progress["value"] = 0
+progress["maximum"] = 100 # maks väärtus progbaril
+progress["value"] = 0 # algväärtus progbaril
 
 lõuend = Canvas(root, width = l, height = k, bg = "black")
 lõuend.pack() # tenie valik oleks grid manager
@@ -27,13 +32,17 @@ pilt = PhotoImage(file="dogerer(2).png")
 objekt = lõuend.create_image(100, 100, image=pilt)
 
 ##### LIIKUVAD PALLID!! #######
-vastased = []
-vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
+vastased = [] #list kuhu salvestatakse võik vastased
+vastane = lõuend.create_oval(300, 300, 350, 350, fill="red") #esimene vastane
 vastased.append(vastane)
 
 ###LIIKUMINE###
-xspeeds = [3]
-yspeeds = [3]
+update_kiirus = 10 #pall liigub 3 pikslit iga 10 ms järel
+vastase_kiirus = 3
+
+xspeeds = [vastase_kiirus]
+yspeeds = [vastase_kiirus]
+
 def moveBall():
     for i in range(len(vastased)): # palli liikumine ja asukoha kt
         lõuend.move(vastased[i], xspeeds[i], yspeeds[i])
@@ -42,8 +51,8 @@ def moveBall():
             xspeeds[i] = -xspeeds[i] #palli suuna muut
         if topPos <= 0 or bottomPos >= k:
             yspeeds[i] = -yspeeds[i]
-    lõuend.after(10, moveBall)
-moveBall() #kutsub funktiooni iga 20 millisekundi järel, loopib
+    lõuend.after(update_kiirus, moveBall)
+moveBall() #kutsub funktiooni iga 10 millisekundi järel, loopib
 ##############################
 
 objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
@@ -91,10 +100,10 @@ def puutetuvastus():
         if progress["value"] >= 100:
             progress["value"] = 0
 
-            uus_vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
+            uus_vastane = lõuend.create_oval(300, 300, 350, 350, fill="red")
             vastased.append(uus_vastane) # lisab uues vastase listi
 
-            xspeeds.append(random.choice([-3, 3])) # lisab suvalise kiiruse uuele vastasele
+            xspeeds.append(random.choice([-3, 3])) # lisab suvalise kiiruse 3 või -3 uuele vastasele
             yspeeds.append(random.choice([-3, 3]))
 
         # suvaline uus asukoht
