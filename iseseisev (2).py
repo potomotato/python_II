@@ -30,7 +30,7 @@ objekt = lõuend.create_image(100, 100, image=pilt)
 ##### liikuv pall ######
 vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
 
-xspeed = yspeed = 5 # kiirus 5 pikslit 20 ms järel
+xspeed = yspeed = 3 # kiirus 3 pikslit 10 ms järel
 def moveBall(): # palli liikumine ja asukoha kt
     global xspeed, yspeed # teeb globaalseks, et saaks muuta funkt sees
     lõuend.move(vastane, xspeed, yspeed)
@@ -39,8 +39,8 @@ def moveBall(): # palli liikumine ja asukoha kt
         xspeed = -xspeed #palli suuna muut
     if topPos <= 0 or bottomPos >= k:
         yspeed = -yspeed
-    lõuend.after(20, moveBall) #kutsub funktiooni iga 20 millisekundi järel
-lõuend.after(20, moveBall) # alustab loopimist
+    lõuend.after(10, moveBall) #kutsub funktiooni iga 20 millisekundi järel
+lõuend.after(10, moveBall) # alustab loopimist
 ##############################
 
 objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
@@ -65,6 +65,7 @@ def doge_äär_puude():
 def puutetuvastus():
     d = lõuend.bbox(objekt)
     o = lõuend.bbox(objekt1)
+    v = lõuend.bbox(vastane)
 
     if (
         d[2] > o[0] and
@@ -94,6 +95,13 @@ def puutetuvastus():
 
         lõuend.move(objekt1, dx, dy)
 
+    elif (
+        d[2] > v[0] and
+        d[0] < v[2] and
+        d[3] > v[1] and
+        d[1] < v[3]
+    ):
+        progress["value"] = 0
 
 
 #liigutab koordinaatide põhjal objekti
