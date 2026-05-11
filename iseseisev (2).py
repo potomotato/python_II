@@ -10,7 +10,7 @@ root.geometry("800x900")
 l = 800
 k = 900
 
-
+tabamus_valmis = True
 # näitab kaugel koordinaat on ekraani piirist. lisab koordinaadid ekraani keskele
 
 progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
@@ -44,6 +44,10 @@ lõuend.after(10, moveBall) # alustab loopimist
 
 objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
 
+def reset_tabamus(): #funktioon mis muudab muudab tabamuse heli tagasi true-ks aja mõõdudes
+    global tabamus_valmis
+    tabamus_valmis = True
+
 #teeeme objektide jlõuendi bbox-i
 def doge_äär_puude():
     doge_äär = lõuend.bbox(objekt) #annab objektile ääre
@@ -62,6 +66,9 @@ def doge_äär_puude():
 
 # Tuvastab kokkupõrke objektide vahel
 def puutetuvastus():
+
+    global tabamus_valmis
+    
     d = lõuend.bbox(objekt)
     o = lõuend.bbox(objekt1)
     v = lõuend.bbox(vastane)
@@ -101,7 +108,12 @@ def puutetuvastus():
         d[1] < v[3]
     ):
         progress["value"] = 0
-        winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
+        # tabamus.wav saab 1 sekundi delay
+        if tabamus_valmis: # kontrollib kas tabamus on valmis et see heli ei spämmiks
+
+            tabamus_valmis = False # muudab falseks, reset tabamus def muudab jälle trueks
+            winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
+            root.after(1000, reset_tabamus)
 
 def colchek(): # kontrollib iga natukese aja tagant kas objektide ääred puutuvad
     doge_äär_puude()
