@@ -2,7 +2,6 @@ from tkinter import *
 import random
 from tkinter import ttk
 import winsound
-import time, threading
 #loov ekraani
 root = Tk()
 root.geometry("800x900")
@@ -75,7 +74,7 @@ def puutetuvastus():
     ):
         
 
-        winsound.PlaySound("hit.wav", winsound.SND_ASYNC)
+        winsound.PlaySound("püüe.wav", winsound.SND_ASYNC)
 
         # progress
         progress["value"] += 10
@@ -102,6 +101,7 @@ def puutetuvastus():
         d[1] < v[3]
     ):
         progress["value"] = 0
+        winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
 
 def colchek(): # kontrollib iga natukese aja tagant kas objektide ääred puutuvad
     doge_äär_puude()
