@@ -106,38 +106,34 @@ def puutetuvastus():
 def colchek(): # kontrollib iga natukese aja tagant kas objektide ääred puutuvad
     doge_äär_puude()
     puutetuvastus()
-    threading.Timer(0.1, colchek).start()
+    root.after(100, colchek)
 
-colchek()
+root.after(100, colchek)
 
 #liigutab koordinaatide põhjal objekti
 def vasak(event):
     x = -10
     y = 0
     lõuend.move(objekt, x, y)
-    doge_äär_puude() # tuvastab, kas objekti bbox puutub lõuendi äärega
-    puutetuvastus()
+
 
 def parem(event):
     x = 10
     y = 0
     lõuend.move(objekt, x, y)
-    doge_äär_puude()
-    puutetuvastus()
+
 
 def üles(event):
     x = 0
     y = -10
     lõuend.move(objekt, x, y)
-    doge_äär_puude()
-    puutetuvastus()
+
 
 def alla(event):
     x = 0
     y = 10
     lõuend.move(objekt, x, y)
-    doge_äär_puude()
-    puutetuvastus()
+
     
 
 #seob klaviatuuri noole klahvid liikumisega
