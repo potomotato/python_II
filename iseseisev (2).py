@@ -26,20 +26,24 @@ lõuend.pack() # tenie valik oleks grid manager
 pilt = PhotoImage(file="dogerer(2).png")
 objekt = lõuend.create_image(100, 100, image=pilt)
 
-##### liikuv pall #######
+##### LIIKUVAD PALLID!! #######
+vastased = []
 vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
+vastased.append(vastane)
 
-xspeed = yspeed = 3 # kiirus 3 pikslit 10 ms järel
-def moveBall(): # palli liikumine ja asukoha kt
-    global xspeed, yspeed # teeb globaalseks, et saaks muuta funkt sees
-    lõuend.move(vastane, xspeed, yspeed)
-    (leftPos, topPos, rightPos, bottomPos) = lõuend.coords(vastane)
-    if leftPos <= 0 or rightPos >= l: #kontrllib kas pall on jõudnud vasaku või parema äärde
-        xspeed = -xspeed #palli suuna muut
-    if topPos <= 0 or bottomPos >= k:
-        yspeed = -yspeed
-    lõuend.after(10, moveBall) #kutsub funktiooni iga 20 millisekundi järel
-lõuend.after(10, moveBall) # alustab loopimist
+###LIIKUMINE###
+xspeeds = [3]
+yspeeds = [3]
+def moveBall():
+    for i in range(len(vastased)): # palli liikumine ja asukoha kt
+        lõuend.move(vastased[i], xspeeds[i], yspeeds[i])
+        (leftPos, topPos, rightPos, bottomPos) = lõuend.coords(vastased[i])
+        if leftPos <= 0 or rightPos >= l: #kontrllib kas pall on jõudnud vasaku või parema äärde
+            xspeeds[i] = -xspeeds[i] #palli suuna muut
+        if topPos <= 0 or bottomPos >= k:
+            yspeeds[i] = -yspeeds[i]
+    lõuend.after(10, moveBall)
+moveBall() #kutsub funktiooni iga 20 millisekundi järel, loopib
 ##############################
 
 objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
@@ -71,7 +75,6 @@ def puutetuvastus():
     
     d = lõuend.bbox(objekt)
     o = lõuend.bbox(objekt1)
-    v = lõuend.bbox(vastane)
 
     if (
         d[2] > o[0] and
@@ -84,9 +87,15 @@ def puutetuvastus():
         winsound.PlaySound("püüe.wav", winsound.SND_ASYNC)
 
         # progress
-        progress["value"] += 10
+        progress["value"] += 25
         if progress["value"] >= 100:
             progress["value"] = 0
+
+            uus_vastane = lõuend.create_oval(300, 300, 400, 400, fill="red")
+            vastased.append(uus_vastane) # lisab uues vastase listi
+
+            xspeeds.append(random.choice([-3, 3])) # lisab suvalise kiiruse uuele vastasele
+            yspeeds.append(random.choice([-3, 3]))
 
         # suvaline uus asukoht
         uus_x = random.randint(50, l-50)
@@ -101,19 +110,23 @@ def puutetuvastus():
 
         lõuend.move(objekt1, dx, dy)
 
-    elif (
-        d[2] > v[0] and
-        d[0] < v[2] and
-        d[3] > v[1] and
-        d[1] < v[3]
-    ):
-        progress["value"] = 0
-        # tabamus.wav saab 1 sekundi delay
-        if tabamus_valmis: # kontrollib kas tabamus on valmis et see heli ei spämmiks
+    else:
+        for vastane in vastased: # kontrollib kõiki vastaseid listis
+            v = lõuend.bbox(vastane)
 
-            tabamus_valmis = False # muudab falseks, reset tabamus def muudab jälle trueks
-            winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
-            root.after(1000, reset_tabamus)
+            if (
+                d[2] > v[0] and
+                d[0] < v[2] and
+                d[3] > v[1] and
+                d[1] < v[3]
+            ):
+                progress["value"] = 0
+                # tabamus.wav saab 1 sekundi delay
+                if tabamus_valmis: # kontrollib kas tabamus on valmis et see heli ei spämmiks
+
+                    tabamus_valmis = False # muudab falseks, reset tabamus def muudab jälle trueks
+                    winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
+                    root.after(1000, reset_tabamus)
 
 def colchek(): # kontrollib iga natukese aja tagant kas objektide ääred puutuvad
     puutetuvastus()
