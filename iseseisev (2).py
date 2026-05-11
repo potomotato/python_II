@@ -63,13 +63,13 @@ def reset_tabamus(): #funktioon mis muudab muudab tabamuse heli tagasi true-ks a
 
 #teeeme objektide jlõuendi bbox-i
 def doge_äär_puude():
-    doge_äär = lõuend.bbox(objekt) #annab objektile ääre
+    doge_äär = lõuend.bbox(objekt) #lõendile annab objekti koordinaadid
     doge_vasak = doge_äär[0]
     doge_parem = doge_äär[2]
     doge_ülemine = doge_äär[1]
     doge_alumine = doge_äär[3]
-    if doge_vasak < 0:
-        lõuend.move(objekt, 10, 0)
+    if doge_vasak < 0: 
+        lõuend.move(objekt, 10, 0) #kui vasak äär on väiksem kui 0, liigutab objekti 10 pikslit paremale
     elif doge_ülemine < 0:
         lõuend.move(objekt, 0, 10)
     elif doge_parem > l:
