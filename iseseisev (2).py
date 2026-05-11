@@ -2,7 +2,7 @@ from tkinter import *
 import random
 from tkinter import ttk
 import winsound
-
+import time, threading
 #loov ekraani
 root = Tk()
 root.geometry("800x900")
@@ -103,6 +103,12 @@ def puutetuvastus():
     ):
         progress["value"] = 0
 
+def colchek(): # kontrollib iga natukese aja tagant kas objektide ääred puutuvad
+    doge_äär_puude()
+    puutetuvastus()
+    threading.Timer(0.1, colchek).start()
+
+colchek()
 
 #liigutab koordinaatide põhjal objekti
 def vasak(event):
@@ -132,6 +138,7 @@ def alla(event):
     lõuend.move(objekt, x, y)
     doge_äär_puude()
     puutetuvastus()
+    
 
 #seob klaviatuuri noole klahvid liikumisega
 root.bind("<Left>", vasak)
