@@ -11,7 +11,7 @@ root.title("dogerererei mäng") #extra clutter
 root.resizable(False, False)
 menu = Menu(root)
 root.config(menu=menu)
-global pihtas
+global pihtas #global
 pihtas = True #kontrollib kas tabamu valmis et heli ei spämmiks
 
 #lõuendi mõõdud
@@ -21,7 +21,7 @@ k = 900
 
 
 
-tabamus_valmis = True #kontrollib kas tabamu valmis et heli ei spämmiks
+
 
 progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate") #deferminate tähendab et täitub kindla protsendi võrra
 progress.pack(pady=10) #paneb ekraanile, pady on kaugus progressi ja teiste elemnt vahel
@@ -49,7 +49,7 @@ xspeeds = [vastase_kiirus]
 yspeeds = [vastase_kiirus]
 
 def moveBall():
-    for i in range(len(vastased)): # palli liikumine ja asukoha kt
+    for i in range(len(vastased)): # 
         lõuend.move(vastased[i], xspeeds[i], yspeeds[i])
         (leftPos, topPos, rightPos, bottomPos) = lõuend.coords(vastased[i])
         if leftPos <= 0 or rightPos >= l: #kontrllib kas pall on jõudnud vasaku või parema äärde
@@ -63,7 +63,7 @@ moveBall() #kutsub funktiooni iga 10 millisekundi järel, loopib
 objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
 
 def reset_tabamus(): #funktioon mis muudab muudab tabamuse heli tagasi true-ks aja mõõdudes
-    global pihtas
+    global pihtas #global on vajalik, et saaks muuta pihtas muutuja väärtust funktsiooni sees
     pihtas = True
 
 #teeeme objektide jlõuendi bbox-i
@@ -86,7 +86,6 @@ def doge_äär_puude():
 def puutetuvastus():
 
     global pihtas
-    global tabamus_valmis
     
     d = lõuend.bbox(objekt)
     o = lõuend.bbox(objekt1)
@@ -105,6 +104,8 @@ def puutetuvastus():
         progress["value"] += 25
         if progress["value"] >= 100:
             progress["value"] = 0
+
+            winsound.PlaySound("uus_pall.wav", winsound.SND_ASYNC)
 
             uus_vastane = lõuend.create_oval(300, 300, 350, 350, fill="red")
             vastased.append(uus_vastane) # lisab uues vastase listi
@@ -137,7 +138,7 @@ def puutetuvastus():
             ):
                 progress["value"] = 0
                 if pihtas:
-                    play_sound()
+                    winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
                     pihtas = False
                     root.after(1000, reset_tabamus)
                     root.after(250, quit)
@@ -151,11 +152,8 @@ def puutetuvastus():
                 
 
     root.after(100, puutetuvastus) # kutsub funki iga 100 ms järel et kontrillida kokkupõrkeid
-
 puutetuvastus() #kutsub funktsiooni
 
-def play_sound():
-    winsound.PlaySound("tabamus.wav", winsound.SND_ASYNC)
 
 #liigutab koordinaatide põhjal objekti
 def vasak(event):
