@@ -14,6 +14,8 @@ root.config(menu=menu)
 global pihtas #global
 pihtas = True #kontrollib kas tabamu valmis et heli ei spämmiks
 
+
+
 #lõuendi mõõdud
 l = 800
 k = 900
@@ -38,7 +40,8 @@ objekt = lõuend.create_image(100, 100, image=pilt)
 
 ##### LIIKUVAD PALLID!! #######
 vastased = [] #list kuhu salvestatakse võik vastased
-vastane = lõuend.create_oval(300, 300, 350, 350, fill="red") #esimene vastane
+pilt2 = PhotoImage(file="käsi.png")
+vastane = lõuend.create_image(400, 400, image=pilt2) #esimene vastane
 vastased.append(vastane)
 
 ###LIIKUMINE###
@@ -51,7 +54,7 @@ yspeeds = [vastase_kiirus]
 def moveBall():
     for i in range(len(vastased)): # 
         lõuend.move(vastased[i], xspeeds[i], yspeeds[i])
-        (leftPos, topPos, rightPos, bottomPos) = lõuend.coords(vastased[i])
+        (leftPos, topPos, rightPos, bottomPos) = lõuend.bbox(vastased[i])
         if leftPos <= 0 or rightPos >= l: #kontrllib kas pall on jõudnud vasaku või parema äärde
             xspeeds[i] = -xspeeds[i] #palli suuna muut
         if topPos <= 0 or bottomPos >= k:
@@ -60,7 +63,8 @@ def moveBall():
 moveBall() #kutsub funktiooni iga 10 millisekundi järel, loopib
 ##############################
 
-objekt1 = lõuend.create_oval(400, 400, 300, 300, fill = "green")
+pilt1 = PhotoImage(file="bit.png")
+objekt1 = lõuend.create_image(100, 100, image=pilt1)
 
 def reset_tabamus(): #funktioon mis muudab muudab tabamuse heli tagasi true-ks aja mõõdudes
     global pihtas #global on vajalik, et saaks muuta pihtas muutuja väärtust funktsiooni sees
@@ -107,7 +111,11 @@ def puutetuvastus():
 
             winsound.PlaySound("uus_pall.wav", winsound.SND_ASYNC)
 
-            uus_vastane = lõuend.create_oval(300, 300, 350, 350, fill="red")
+            uus_vastane_x = random.randint(50, l-50)
+            uus_vastane_y = random.randint(50, k-50)
+
+            uus_vastane = lõuend.create_image(uus_vastane_x, uus_vastane_y, image=pilt2) #loob uue vastase suvalisse asukohta
+                        
             vastased.append(uus_vastane) # lisab uues vastase listi
 
             xspeeds.append(random.choice([-3, 3])) # lisab suvalise kiiruse 3 või -3 uuele vastasele
@@ -118,8 +126,8 @@ def puutetuvastus():
         uus_y = random.randint(50, k-50)
 
         vana = lõuend.coords(objekt1)
-        vana_x = (vana[0] + vana[2]) / 2
-        vana_y = (vana[1] + vana[3]) / 2
+        vana_x = vana[0]
+        vana_y = vana[1]
 
         dx = uus_x - vana_x
         dy = uus_y - vana_y
@@ -129,7 +137,7 @@ def puutetuvastus():
     else:
         for vastane in vastased: # kontrollib kõiki vastaseid listis
             v = lõuend.bbox(vastane)
-
+            # kokkupuute loogika
             if (
                 d[2] > v[0] and
                 d[0] < v[2] and
@@ -152,7 +160,7 @@ def puutetuvastus():
                 
 
     root.after(100, puutetuvastus) # kutsub funki iga 100 ms järel et kontrillida kokkupõrkeid
-puutetuvastus() #kutsub funktsiooni
+puutetuvastus() #loopib
 
 
 #liigutab koordinaatide põhjal objekti
